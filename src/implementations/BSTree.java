@@ -1,6 +1,8 @@
 package implementations;
 
 import java.io.Serializable;
+import java.util.NoSuchElementException;
+import java.util.Stack;
 
 import utilities.BSTreeADT;
 import utilities.Iterator;
@@ -11,13 +13,20 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
 	private BSTreeNode<E> root;
 	private int size;
 	
-	public BSTree() 
+	
+	
+	public BSTree () 
 	{
 		root = null;
 		size = 0;
 	}
+	public BSTree(E rootElement) 
+	{
+		this();
+		add(rootElement);
+	}
 	
-	
+
 	@Override
 	public BSTreeNode<E> getRoot() throws NullPointerException
 	{
@@ -38,7 +47,7 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
 	{
 		if(node == null) 
 		{
-			return -1;
+			return 0;
 		}
 		
 		return 1 + Math.max(getHeight(node.getLeft()), getHeight(node.getRight()));
@@ -222,22 +231,122 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
 	@Override
 	public Iterator<E> inorderIterator()
 	{
-		
-		return null;
+		Stack <BSTreeNode<E>> stack = new Stack<>();
+		return new Iterator<E>() 
+		{
+			BSTreeNode<E> current = root;
+
+			@Override
+			public boolean hasNext()
+			{
+				return !stack.isEmpty() || current != null;			
+			}
+
+			@Override
+			public E next() throws NoSuchElementException
+			{
+				while(current != null) 
+				{
+					stack.push(current);
+					current = current.getLeft();
+				}
+				if (!stack.isEmpty()) 
+				{
+					BSTreeNode<E> node = stack.pop();
+					current = node.getRight();
+					return node.getElement();
+				}
+				throw new NoSuchElementException();
+			}
+		};
 	}
 
 	@Override
 	public Iterator<E> preorderIterator()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Stack <BSTreeNode<E>> stack = new Stack<>();
+		if (root != null) 
+		{
+			stack.push(root);
+		}
+		return new Iterator<E>() 
+		{
+
+			@Override
+			public boolean hasNext()
+			{
+				return !stack.isEmpty();
+				
+			}
+
+			@Override
+			public E next() throws NoSuchElementException
+			{
+				if (stack.isEmpty()) 
+				{
+					throw new NoSuchElementException();
+				}
+				BSTreeNode<E> node = stack.pop();
+				
+				if(node.getRight() != null) 
+				{
+					stack.push(node.getRight());
+				}
+				if(node.getLeft() != null) 
+				{
+					stack.push(node.getLeft());
+				}
+				
+				return node.getElement();
+			}
+			
+		};
 	}
 
 	@Override
 	public Iterator<E> postorderIterator()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Stack <BSTreeNode<E>> stack = new Stack<>();
+		Stack<E> output = new Stack<>();
+		if (root != null) 
+		{
+			stack.push(root);
+		}
+		
+		while (!stack.isEmpty()) 
+		{
+			BSTreeNode<E> node = stack.pop();
+			output.push(node.getElement());
+			if (node.getLeft() != null) 
+			{
+				stack.push(node.getLeft());
+			}
+			if (node.getRight() != null) 
+			{
+				stack.push(node.getRight());
+			}
+		}
+		return new Iterator<E>() 
+		{
+
+			@Override
+			public boolean hasNext()
+			{
+				
+				return !output.isEmpty();
+			}
+
+			@Override
+			public E next() throws NoSuchElementException
+			{
+				if (output.isEmpty()) 
+				{
+					throw new NoSuchElementException();
+				}
+				return output.pop();
+			}
+			
+		};
 	}
 
 }
