@@ -1,4 +1,5 @@
-/serialization/
-/WordTracker/
-/utilities/
 /domain/
+/implementations/
+/serialization/
+/unitTests/
+/utilities/

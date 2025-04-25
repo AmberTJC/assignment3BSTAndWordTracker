@@ -18,10 +18,7 @@ public class Word implements Comparable<Word>, Serializable {
     }
     
     public void addOccurrence(String filename, int lineNumber) {
-        if (!fileOccurrences.containsKey(filename)) {
-            fileOccurrences.put(filename, new ArrayList<>());
-        }
-        fileOccurrences.get(filename).add(lineNumber);
+        fileOccurrences.computeIfAbsent(filename, k -> new ArrayList<>()).add(lineNumber);
     }
     
     public String getWord() {
@@ -48,9 +45,22 @@ public class Word implements Comparable<Word>, Serializable {
     public int compareTo(Word other) {
         return this.word.compareTo(other.word);
     }
-    
+
     @Override
     public String toString() {
-        return word;
+        StringBuilder sb = new StringBuilder();
+        sb.append(word).append(": ");
+        fileOccurrences.forEach((file, lines) -> sb.append(file).append(" -> ").append(lines).append("  "));
+        return sb.toString().trim();
     }
+
+
+    
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        if (fileOccurrences == null) {
+            fileOccurrences = new HashMap<>();
+        }
+    }
+
 }
