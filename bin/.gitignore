@@ -1,4 +1,4 @@
-/appDomain/
-/implementations/
-/unitTests/
+/serialization/
+/WordTracker/
 /utilities/
+/domain/
