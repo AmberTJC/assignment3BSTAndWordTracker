@@ -5,6 +5,33 @@ import java.util.*;
 import domain.Word;
 import implementations.BSTree;
 
+/**
+ * WordTracker
+ * 
+ * This program reads one or more text files and stores all unique words
+ * into a Binary Search Tree (BST) along with their occurrence details
+ * (filename and line numbers). It supports loading from and saving to 
+ * a serialized repository, and generates output reports sorted either by
+ * alphabetical order, total frequency, or number of files.
+ * 
+ * Usage:
+ *   java -jar WordTracker.jar <file1> [<file2> ...] <option> [-f<outputFile>]
+ * 
+ * Options:
+ *   -pf : Print words alphabetically with files they appear in.
+ *   -pl : Print words alphabetically with files and line numbers.
+ *   -po : Print words alphabetically with files, line numbers, and frequency.
+ *   -f<outputFile> : (Optional) Save output to the specified file instead of printing to console.
+ * 
+ * Dependencies:
+ * - domain.Word
+ * - implementations.BSTree
+ * - implementations.BSTreeNode
+ * 
+ * Author: [Team Mineru]
+ * Date: [April 25, 2025]
+ */
+
 public class WordTracker {
 
     private static final String REPO_FILENAME = "repository.ser";
